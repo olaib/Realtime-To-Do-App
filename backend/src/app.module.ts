@@ -12,6 +12,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConnectionModule } from './connection/connection.module';
+import { AuthMiddleware } from './auth/middlewares/auth.middleware';
 
 @Module({
   imports: [
@@ -27,4 +28,28 @@ import { ConnectionModule } from './connection/connection.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .exclude(
+        {
+          path: '/',
+          method: RequestMethod.GET,
+        }, 
+        {
+          path: '/api/',
+          method: RequestMethod.GET,
+        },
+        {
+          path: '/api/users/login',
+          method: RequestMethod.POST,
+        },
+        {
+          path: '/api/users',
+          method: RequestMethod.POST,
+        },
+      )
+      .forRoutes('');
+  }
+}

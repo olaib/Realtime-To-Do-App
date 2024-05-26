@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TodoGateway } from './todo.gateway';
-import { TodoService } from './todo.service';
+import { TodoService } from './services/todo.service';
 
 describe('TodoGateway', () => {
   let gateway: TodoGateway;

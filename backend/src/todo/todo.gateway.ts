@@ -4,8 +4,9 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   MessageBody,
+  WebSocketServer,
 } from '@nestjs/websockets';
-import { TodoService } from './todo.service';
+import { TodoService } from './services/todo.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Socket, Server } from 'socket.io';
@@ -13,6 +14,7 @@ import { User } from 'src/users/scemas/user.schema';
 import { AuthService } from 'src/auth/auth.service';
 import { UsersService } from 'src/users/users.service';
 import { UnauthorizedException } from '@nestjs/common';
+import { ConnectionService } from 'src/connection/connection.service';
 
 @WebSocketGateway({
   namespace: 'todo',
@@ -39,10 +41,7 @@ export class TodoGateway implements OnGatewayConnection, OnGatewayDisconnect {
       );
       if (!user) this.disconnect(socket);
       else {
-        await this.connectionService.create({
-          socketId: socket.id,
-          connectedUser: user,
-        });
+        await this.connectionService.create(socket.id, user);
 
         const todos = await this.todoService.findAll();
 
@@ -94,7 +93,3 @@ export class TodoGateway implements OnGatewayConnection, OnGatewayDisconnect {
     socket.disconnect();
   }
 }
-function WebSocketServer(): (target: TodoGateway, propertyKey: "server") => void {
-  throw new Error('Function not implemented.');
-}
-

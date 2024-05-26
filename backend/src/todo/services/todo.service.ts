@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTodoDto } from './dto/create-todo.dto';
-import { UpdateTodoDto } from './dto/update-todo.dto';
-import { Todo, TodoDocument } from './scemas/todo.schema';
+import { CreateTodoDto } from '../dto/create-todo.dto';
+import { UpdateTodoDto } from '../dto/update-todo.dto';
+import { Todo, TodoDocument } from '../scemas/todo.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 @Injectable()
 export class TodoService {
+ 
   constructor(
     @InjectModel(Todo.name) private readonly todoModel: Model<TodoDocument>,
-  ) {}
+  ) {
+    console.log('TodoService created');
+  }
 
   async create(createTodoDto: CreateTodoDto): Promise<TodoDocument> {
     return this.todoModel.create(createTodoDto);
@@ -31,5 +34,9 @@ export class TodoService {
 
   async remove(id: number) {
     return this.todoModel.findByIdAndDelete(id).exec(); 
+  }
+
+  async saveAll(todos: Todo[]): Promise<Todo[]> {
+    return await this.todoModel.create(todos);
   }
 }

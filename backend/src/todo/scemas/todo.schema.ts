@@ -17,10 +17,10 @@ export class Todo {
 
   @ApiProperty()
   @Prop({ required: true, type: Boolean, default: false })
-  completed!: boolean;
+  isCompleted!: boolean;
 
   @ApiProperty()
-  @Prop({ required: true, type: Date })
+  @Prop({ type: Date })
   dueDate?: Date;
 }
 

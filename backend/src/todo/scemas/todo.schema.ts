@@ -11,17 +11,22 @@ export class Todo {
   @Prop({ required: true, type: String, unique: true })
   title!: string;
 
-  @Prop({ required: true, type: String, default: '' })
   @ApiProperty()
+  @Prop({
+    required: true,
+    type: String,
+    default: '',
+    set: (value: string) => value.trim(),
+  })
   description!: string;
 
   @ApiProperty()
-  @Prop({ required: true, type: Boolean, default: false })
-  isCompleted!: boolean;
+  @Prop({ required: false, type: Boolean, default: false })
+  isCompleted?: boolean;
 
   @ApiProperty()
-  @Prop({ type: Date })
-  dueDate?: Date;
+  @Prop({ type: Date, default: null })
+  dueDate?: Date | null;
 }
 
 export const TodoSchema = SchemaFactory.createForClass(Todo);

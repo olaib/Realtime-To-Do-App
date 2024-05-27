@@ -21,35 +21,32 @@ import { AuthMiddleware } from './auth/middlewares/auth.middleware';
     }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     TodoModule,
-    UsersModule,
-    AuthModule,
-    ConnectionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .exclude(
-        {
-          path: '/',
-          method: RequestMethod.GET,
-        }, 
-        {
-          path: '/api/',
-          method: RequestMethod.GET,
-        },
-        {
-          path: '/api/users/login',
-          method: RequestMethod.POST,
-        },
-        {
-          path: '/api/users',
-          method: RequestMethod.POST,
-        },
-      )
-      .forRoutes('');
+  //   consumer
+  //     .apply(AuthMiddleware)
+  //     .exclude(
+  //       {
+  //         path: '/',
+  //         method: RequestMethod.GET,
+  //       }, 
+  //       {
+  //         path: '/api/',
+  //         method: RequestMethod.GET,
+  //       },
+  //       {
+  //         path: '/api/users/login',
+  //         method: RequestMethod.POST,
+  //       },
+  //       {
+  //         path: '/api/users',
+  //         method: RequestMethod.POST,
+  //       },
+  //     )
+  //     .forRoutes('');
   }
 }

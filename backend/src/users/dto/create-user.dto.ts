@@ -1,19 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import { CreateTodoDto } from 'src/todo/dto/create-todo.dto';
 import { Todo } from 'src/todo/scemas/todo.schema';
-
 
 export class CreateUserDto {
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Username is required' })
   @IsString()
-  username!: string;
+  readonly username!: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  password!: string;
-
-  @ApiProperty()
-  @IsArray()
-  tasks?: Todo;
+  @IsNotEmpty({ message: 'Password is required' })
+  @IsString()
+  readonly password!: string;
 }

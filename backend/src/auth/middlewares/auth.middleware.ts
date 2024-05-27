@@ -3,7 +3,6 @@ import {
   HttpStatus,
   Injectable,
   NestMiddleware,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { NextFunction } from 'express';
 import { User } from 'src/users/scemas/user.schema';
@@ -40,5 +39,5 @@ export class AuthMiddleware implements NestMiddleware {
     } catch (error) {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
-  } 
+  }
 }

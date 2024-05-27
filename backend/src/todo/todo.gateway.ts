@@ -30,27 +30,27 @@ export class TodoGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly connectionService: ConnectionService,
   ) {}
 
-  async handleConnection(socket: Socket) {
+  async handleConnection(client: Socket) {
     try {
       // if is not verified, this will throw an exeption
       const decodedValidToken = await this.authService.verifyJwt(
-        socket.handshake.auth.Authorization,
-      );
+        client.handshake.auth.Authorization,
+      ); 
       const user: User = await this.usersService.findOne(
         decodedValidToken.user.id,
       );
-      if (!user) this.disconnect(socket);
+      if (!user) this.disconnect(client);
       else {
-        await this.connectionService.create(socket.id, user);
+        await this.connectionService.create(client.id, user);
 
         const todos = await this.todoService.findAll();
 
         // emit to connected client
-        return this.server.to(socket.id).emit('todos', todos);
+        return this.server.to(client.id).emit('todos', todos);
       }
     } catch {
       console.log('discnnecting ...');
-      return this.handleDisconnect(socket);
+      return this.handleDisconnect(client);
     }
   }
 
@@ -59,37 +59,37 @@ export class TodoGateway implements OnGatewayConnection, OnGatewayDisconnect {
    * remove from db then disconnet
    * @param socket - client socket
    */
-  async handleDisconnect(socket: Socket) {
-    await this.connectionService.deleteBySocketId(socket.id);
-    socket.disconnect();
+  async handleDisconnect(client: Socket) {
+    await this.connectionService.deleteBySocketId(client.id);
+    client.disconnect();
   }
 
   @SubscribeMessage('createTodo')
-  create(@MessageBody() createTodoDto: CreateTodoDto) {
-    return this.todoService.create(createTodoDto);
+  async create(@MessageBody() createTodoDto: CreateTodoDto): Promise<any> {
+    return await this.todoService.create(createTodoDto);
   }
 
   @SubscribeMessage('findAllTodo')
-  findAll() {
-    return this.todoService.findAll();
+  async findAll() {
+    return await this.todoService.findAll();
   }
 
   @SubscribeMessage('findOneTodo')
-  findOne(@MessageBody() id: string) {
-    return this.todoService.findOne(id);
+  async findOne(@MessageBody() id: string) {
+    return await this.todoService.findOne(id);
   }
 
   @SubscribeMessage('updateTodo')
-  update(@MessageBody() updateTodoDto: UpdateTodoDto) {
-    return this.todoService.update(updateTodoDto.id, updateTodoDto);
+  async update(@MessageBody() updateTodoDto: UpdateTodoDto) {
+    return await this.todoService.update(updateTodoDto.id, updateTodoDto);
   }
 
   @SubscribeMessage('removeTodo')
-  remove(@MessageBody() id: number) {
-    return this.todoService.remove(id);
+  async remove(@MessageBody() id: number) {
+    return await this.todoService.remove(id);
   }
-  private disconnect(socket: Socket) {
-    socket.emit('Error', new UnauthorizedException());
-    socket.disconnect();
+  private disconnect(client: Socket) {
+    client.emit('Error', new UnauthorizedException());
+    client.disconnect();
   }
 }

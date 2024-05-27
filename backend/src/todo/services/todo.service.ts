@@ -7,12 +7,9 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class TodoService {
- 
   constructor(
     @InjectModel(Todo.name) private readonly todoModel: Model<TodoDocument>,
-  ) {
-    console.log('TodoService created');
-  }
+  ) {}
 
   async create(createTodoDto: CreateTodoDto): Promise<TodoDocument> {
     return this.todoModel.create(createTodoDto);
@@ -33,7 +30,7 @@ export class TodoService {
   }
 
   async remove(id: number) {
-    return this.todoModel.findByIdAndDelete(id).exec(); 
+    return this.todoModel.findByIdAndDelete(id).exec();
   }
 
   async saveAll(todos: Todo[]): Promise<Todo[]> {

@@ -8,7 +8,10 @@ export type ConnectionDocument = HydratedDocument<Connection>;
 export class Connection {
   @Prop({ required: true })
   socketId: string;
-  @Prop({ type: MongooseShema.Types.ObjectId, ref: 'User', required: true })
+  @Prop({
+    type: [{ type: MongooseShema.Types.ObjectId, ref: 'User' }],
+    required: true,
+  })
   connectedUser: User[];
 }
 

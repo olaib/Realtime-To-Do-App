@@ -1,24 +1,30 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateTodoDto {
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
-    title!: string;
+  @ApiProperty()
+  @IsNotEmpty({ message: 'Title is required'})
+  @IsString()
+  title!: string;
 
-    @ApiProperty()
-    @IsString()
-    @IsOptional()
-    description?: string;
-    
-    @ApiProperty()
-    @IsString()
-    @IsOptional()
-    completed?: boolean;
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  description?: string;
 
-    @ApiProperty()
-    @IsDate()
-    @IsOptional()
-    dueDate!: Date;
+  @ApiProperty()
+  @IsBoolean({ message: 'Invalid boolean format' })
+  @IsOptional()
+  isCompleted!: boolean;
+
+  @ApiProperty()
+  @IsDate({ message: 'Invalid date format' })
+  @IsOptional()
+  dueDate?: Date;
 }

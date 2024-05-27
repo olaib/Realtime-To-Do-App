@@ -22,9 +22,7 @@ export class User {
 
   @ApiProperty()
   @Prop({
-    type: MongoSchema.Types.ObjectId,
-    ref: 'Todo',
-    default: [],
+    type: [{ type: MongoSchema.Types.ObjectId, ref: 'Todo' }],
   })
   tasks!: Todo[];
 }
